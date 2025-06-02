@@ -1,0 +1,231 @@
+---
+title: "Análisis de tendencias de Pinterest en R: Un estudio comparativo entre Europa mediterránea e Hispanoamérica"
+author: "Elena, Almudena y Diego"
+date: "`r Sys.Date()`"
+output: slidy_presentation
+---
+
+```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = getwd())
+```
+
+
+# Índice del trabajo
+1. Introducción
+2. Objetivos
+3. Fuentes
+4. Tratamiento de los datos
+5. Análisis de los datos
+6. Conclusiones
+  
+# Introducción
+...
+## Contextualización
+...
+## Marco teórico
+...
+## Comparativa regional
+...
+## Dimensión temporal
+...
+## Herramienta y tecnología
+...
+
+# Objetivos
+## Objetivo general
+Comparar las tendencias de búsqueda en Pinterest entre Europa mediterránea e Hispanoamérica a lo largo del año 2024.
+## Objetivos específicos
+1. Identificar los patrones comunes para averiguar el grado de homogeneización cultural entre ambas regiones y su comportamiento a lo largo del tiempo.
+2. Analizar la evolución temporal de las tendencias entre países.
+3. comparar las dinámicas de búsqueda por género de cada región.
+
+#Fuente
+
+# Análisis de los datos
+## Se instalan los paquetes
+## Se cargan los paquetes
+```{r}
+library(tm)
+library(slam)
+library(text2vec)
+library(dplyr)
+library(readxl)
+library(wordcloud)
+library(RColorBrewer)
+library(tidytext)
+library(ggplot2)
+```
+
+## Se cargan los datos y se les asigna un nombre a cada base de datos
+```{r}
+hombres_europa <- read_excel("data/Europa Sur hombres.xlsx")
+mujeres_europa <- read_excel("data/Europa Sur mujeres.xlsx")
+hombres_hispano <- read_excel("data/Hispanoamérica hombres.xlsx")
+mujeres_hispano <- read_excel("data/Hispanoamérica mujeres.xlsx")
+```
+
+## Se unifican en un solo dataframe
+```{r}
+hombres_europa <- hombres_europa %>% mutate(genero = "Hombre", region = "Europa Sur")
+mujeres_europa <- mujeres_europa %>% mutate(genero = "Mujer", region = "Europa Sur")
+hombres_hisp <- hombres_hispano %>% mutate(genero = "Hombre", region = "Hispanoamérica")
+mujeres_hisp <- mujeres_hispano %>% mutate(genero = "Mujer", region = "Hispanoamérica")
+
+datos <- bind_rows(hombres_europa, mujeres_europa, hombres_hisp, mujeres_hisp)
+```
+
+## Se realiza una limpieza del texto
+```{r}
+stopwords_personalizadas <- c(stopwords("spanish"), "hombre", "mujer", "de", "la", 
+                              "el", "en", "los", "las", "un", "una", "y", "con", "para")
+
+palabras_filtradas <- datos %>%
+  unnest_tokens(palabra, Tendencia) %>%
+  filter(!palabra %in% stopwords_personalizadas)
+```
+
+## Se crean concatenados por género y región
+```{r}
+textos_por_region <- datos %>%
+  group_by(region) %>%
+  summarise(texto = paste(Tendencia, collapse = " "), .groups = "drop")
+
+textos_por_genero <- datos %>%
+  group_by(genero) %>%
+  summarise(texto = paste(Tendencia, collapse = " "), .groups = "drop")
+```
+
+## Se crean funciones para poder hacer las nubes de palabras
+```{r}
+crear_nube <- function(texto, nombre) {
+  corpus <- Corpus(VectorSource(texto))
+  corpus <- tm_map(corpus, content_transformer(tolower))       
+  corpus <- tm_map(corpus, removePunctuation)                  
+  corpus <- tm_map(corpus, removeNumbers)                      
+  corpus <- tm_map(corpus, removeWords, stopwords_personalizadas)  
+  corpus <- tm_map(corpus, stripWhitespace)                    
+  
+  dtm <- TermDocumentMatrix(corpus)
+  matriz <- as.matrix(dtm)
+  frecuencias <- sort(rowSums(matriz), decreasing = TRUE)
+  
+  wordcloud(
+    words = names(frecuencias),
+    freq = frecuencias,
+    min.freq = 2,
+    max.words = 100,
+    colors = brewer.pal(8, "Dark2"),
+    random.order = FALSE
+  )
+}
+```
+
+## Nubes de palabras
+### Por región
+```{r}
+par(mfrow = c(1, nrow(textos_por_region)))
+for (i in 1:nrow(textos_por_region)) {
+  crear_nube(textos_por_region$texto[i], textos_por_region$region[i])
+  title(main = textos_por_region$region[i], cex.main = 1.5)
+}
+```
+### Por género
+```{r}
+par(mfrow = c(1, nrow(textos_por_genero)))
+for (i in 1:nrow(textos_por_genero)) {
+  crear_nube(textos_por_genero$texto[i], textos_por_genero$genero[i])
+  title(main = textos_por_genero$genero[i], cex.main = 1.5)
+}
+```
+
+## Ahora, las palabras más frecuentes y los gráficos para género y región
+### Palabras más frecuentes por género y su gráfico
+```{r}
+frecuencias_genero <- palabras_filtradas %>%
+  count(genero, palabra, sort = TRUE) %>%
+  group_by(genero) %>%
+  top_n(10, n) %>%
+  ungroup() %>%
+  arrange(genero, desc(n))
+
+print(frecuencias_genero, n = Inf)
+
+frecuencias_genero %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = genero)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~genero, scales = "free_y") +
+  labs(title = "Palabras más frecuentes por género",
+       x = NULL, y = "Frecuencia")
+```
+### Palabras más frecuentes por región y su gráfico
+```{r}
+frecuencias_region <- palabras_filtradas %>%
+  count(region, palabra, sort = TRUE) %>%
+  group_by(region) %>%
+  top_n(10, n) %>%
+  ungroup() %>%
+  arrange(region, desc(n))
+
+print(frecuencias_region, n = Inf)
+
+frecuencias_region %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = region)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~region, scales = "free_y") +
+  labs(title = "Palabras más frecuentes por región",
+       x = NULL, y = "Frecuencia")
+```
+
+## Análisis secundario: Se eliminan aquellas palabras comunes entre grupos para detectar posibles diferencias
+### Por género
+```{r}
+palabras_comunes_genero <- palabras_filtradas %>%
+  group_by(palabra) %>%
+  summarise(grupos = n_distinct(genero)) %>%
+  filter(grupos > 1) %>%
+  pull(palabra)
+
+frecuencias_genero_sin_comunes <- palabras_filtradas %>%
+  filter(!palabra %in% palabras_comunes_genero) %>%
+  count(genero, palabra, sort = TRUE) %>%
+  group_by(genero) %>%
+  top_n(10, n) %>%
+  ungroup()
+
+frecuencias_genero_sin_comunes %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = genero)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~genero, scales = "free_y") +
+  labs(title = "Palabras más distintivas por género",
+       x = NULL, y = "Frecuencia")
+```
+### Por región
+```{r}
+palabras_comunes_region <- palabras_filtradas %>%
+  group_by(palabra) %>%
+  summarise(grupos = n_distinct(region)) %>%
+  filter(grupos > 1) %>%
+  pull(palabra)
+
+frecuencias_region_sin_comunes <- palabras_filtradas %>%
+  filter(!palabra %in% palabras_comunes_region) %>%
+  count(region, palabra, sort = TRUE) %>%
+  group_by(region) %>%
+  slice_max(order_by = n, n = 10) %>%
+  ungroup()
+
+frecuencias_region_sin_comunes %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = region)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~region, scales = "free_y") +
+  labs(title = "Palabras más distintivas por región",
+       x = NULL, y = "Frecuencia")
+```
+
+# Ideas generales

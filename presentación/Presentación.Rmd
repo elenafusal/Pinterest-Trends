@@ -8,11 +8,9 @@ output: slidy_presentation
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-library(rstudioapi)
-setwd(dirname(getActiveDocumentContext()$path))
-
-print(getwd())
-print(list.files("data"))
+library(here)
+print(here::here())
+print(list.files(here("data")))
 ```
 
 ---
@@ -142,11 +140,12 @@ library(ggplot2)
 Se cargan los datos y se les asigna un nombre a cada base de datos
 ```{r cargar_datos, include=FALSE}
 library(readxl)
+library(here)
 
-hombres_europa <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Europa Sur hombres.xlsx")
-mujeres_europa <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Europa Sur mujeres.xlsx")
-hombres_hispano <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Hispanoamérica hombres.xlsx")
-mujeres_hispano <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Hispanoamérica mujeres.xlsx")
+hombres_europa <- read_excel(here("data", "Europa Sur hombres.xlsx"))
+mujeres_europa <- read_excel(here("data", "Europa Sur mujeres.xlsx"))
+hombres_hispano <- read_excel(here("data", "Hispanoamérica hombres.xlsx"))
+mujeres_hispano <- read_excel(here("data", "Hispanoamérica mujeres.xlsx"))
 ```
 Se unifican en un solo dataframe
 ```{r}

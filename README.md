@@ -1,6 +1,6 @@
 # Análisis de Tendencias en Pinterest
 
-Este repositorio contiene un análisis de tendencias utilizando datos extraídos de Pinterest Trends. Se han sacado datos de hombres y mujeres de Europa del Sur y de Hispanoamérica. 
+Este repositorio contiene un análisis de tendencias utilizando datos extraídos de Pinterest Trends. Se han sacado datos de hombres y mujeres de Europa del Sur y de Hispanoamérica a lo largo del año 2024.
 
 ## Estructura del repositorio
 

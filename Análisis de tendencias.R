@@ -230,17 +230,6 @@ ggplot(datos_filtrados, aes(x = Fecha, y = Valor, color = Tendencia)) +
         axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_color_brewer(palette = "Set1")
 
-## Gráfico de áreas apiladas
-ggplot(datos_filtrados, aes(x = Fecha, y = Valor, fill = Tendencia)) +
-  geom_area(position = "stack", alpha = 0.8) +
-  facet_grid(genero ~ region) +
-  labs(title = "Distribución de las tendencias a lo largo del tiempo",
-       x = "Fecha", y = "Nivel de tendencia") +
-  theme_minimal(base_size = 12) +
-  theme(legend.position = "bottom",
-        axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_brewer(palette = "Set2")
-
 ----------
 
 # Para abrir la presentación!!!

@@ -247,3 +247,7 @@ ggplot(datos_filtrados, aes(x = Fecha, y = Valor, fill = Tendencia)) +
 list.files("data", pattern = "\\.xlsx$")
 getwd()
 list.files("data")
+
+system("git log --oneline")
+system("git status")
+system("git push")

@@ -1,0 +1,434 @@
+---
+title: "Análisis de tendencias de Pinterest en R: Un estudio comparativo entre Europa mediterránea e Hispanoamérica"
+author: "Elena, Almudena y Diego"
+date: "`r Sys.Date()`"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(rstudioapi)
+setwd(dirname(getActiveDocumentContext()$path))
+
+print(getwd())
+print(list.files("data"))
+```
+
+---
+
+# Índice del trabajo
+1. Introducción
+2. Objetivos
+3. Fuentes
+4. Tratamiento de los datos
+5. Análisis de los datos
+6. Conclusiones
+
+---
+  
+## Contextualización
+Pinterest se ha consolidado como una plataforma digital de referencia en el intercambio y almacenamiento de contenido visual, funcionando como un escaparate privilegiado de preferencias estéticas y tendencias culturales a nivel global. A diferencia de otras redes sociales centradas en la interacción textual o la comunicación instantánea, Pinterest constituye un espacio donde los usuarios “coleccionan” inspiración, ideas y referencias visuales organizadas temáticamente (Jing et al., 2019, p.283). Esta característica convierte a la aplicación en una fuente de datos excepcionalmente valiosa para el análisis de patrones culturales emergentes, ya que las búsquedas e interacciones de los usuarios reflejan intereses genuinos y aspiraciones estéticas más que comportamientos sociales reactivos, un fenómeno que Bakhshi et al. (2014, p.698) denominan “curaduría digital del gusto”. 
+
+Como señala Bourdieu (1984, p.173) en su análisis del gusto como fenómeno social, “los principios que organizan las prácticas estéticas se estructuran a partir de condiciones sociales específicas”. En este sentido, Pinterest ofrece un terreno fértil para observar cómo se configuran estos principios en el contexto digital contemporáneo, donde las fronteras geográficas y las limitaciones se difuminan en favor de una aparente democratización del acceso a contenidos culturales.
+
+---
+
+## Marco teórico
+Las redes sociales contemporáneas funcionan como poderosos agentes de circulación simbólica que modelan gustos, modas y aspiraciones colectivas. Como argumenta Castells (2010, p.406) en su análisis de la sociedad red, “vivimos en un mundo caracterizado por flujos globales de riqueza, poder e imágenes, que interactúan con la identidad y la experiencia en configuraciones de redes variables”. En este contexto digital, emerge la hipótesis central de nuestro trabajo: la posible existencia de una homogeneización cultural, entendida como la convergencia progresiva de patrones simbólicos y preferencias estéticas a escala global.
+
+Esta hipótesis dialoga con dos corrientes teóricas aparentemente contrapuestas. Por un lado, la tesis de la globalización cultural propuesta por autores como Robertson (1992, p.132-134), que sugiere un movimiento progresivo hacia la uniformidad cultural producto de la internacionalización de los mercados y las comunicaciones. Por otro lado, la noción de glocalización defendida por sociólogos como Ritzer (2003, p.82), que enfatiza cómo los elementos culturales globales son reinterpretados y adaptados a contextos locales, generando hibridaciones y resistencias a la homogeneización.
+
+El análisis de las tendencias de búsqueda en Pinterest nos permite examinar empíricamente estas dinámicas, observando tanto los posibles patrones de convergencia como las persistencias de especificidades culturales regionales en un entorno digital compartido. 
+
+---
+
+## Comparativa regional
+SPara este estudio, se propone un análisis comparativo entre dos regiones culturalmente emparentadas pero geográfica y socioeconómicamente distintas: 
+
+- **Europa mediterránea:** España, Italia, Portugal, Grecia y Malta 
+- **Hispanoamérica:** México, Colombia, Chile y Argentina 
+
+Esta selección responde a criterios metodológicos deliberados. Ambas regiones comparten raíces históricas y vínculos lingüísticos sustanciales (lenguas romances predominantes), lo que permite establecer un marco comparativo con cierta homogeneidad cultural de base. Sin embargo, difieren significativamente en aspectos como:
+
+- Acceso digital y penetración tecnológica
+- Patrones de consumo y estilos de vida
+- Influencias estéticas (proximidad a Estados Unidos vs. tradición europea)
+- Ritmos estacionales inversos entre hemisferios
+- Desigualdades socioeconómicas y desarrollo material
+
+Como señala García Canclicini (2001, p.89) en su análisis de las culturas híbridas, “la globalización no es un simple proceso de homogeneización, sino de reordenamiento de las diferencias y desigualdades”. Esta configuración comparativa nos permite examinar si las tendencias estéticas y culturales en Pinterest reflejan primordialmente estos factores diferenciales o si, por el contrario, evidencian un proceso de homogeneización que trasciende especificidades regionales, un fenómeno que Wallerstein (2004, p.23) analiza en términos de relaciones “centro-periferia” en la circulación global de bienes culturales. 
+
+---
+
+## Metodología
+Este estudio adopta un enfoque cuantitativo de carácter exploratorio-descriptivo, basado en el análisis comparativo de datos de tendencias de búsqueda extraídos de la plataforma Pinterest. El diseño metodológico implementado combina técnicas avanzadas de análisis de big data con marcos interpretativos propios de la sociología cultural, permitiendo así una comprensión integral de los patrones de comportamiento digital y su relación con las dinámicas culturales contemporáneas. 
+
+Para el análisis, se emplea la herramienta estadística RStudio, seleccionada por su capacidad para manejar grandes volúmenes de datos textuales y generar visualizaciones complejas. Se aplican técnicas como análisis de frecuencias, visualizaciones comparativas (nubes de palabras) e índices cuantitativos de similitud cultural y correlación temporal, lo que proporciona una base empírica sólida para evaluar las hipótesis sobre convergencia cultural entre las regiones. 
+
+El procedimiento analítico se desarrolla en tres fases: limpieza y normalización de datos, categorización temática de términos según las áreas culturales (moda, estilos de vida, etc.), y análisis longitudinal comparado de patrones culturales. Este último permite identificar tanto diferencias estructurales como dinámicas temporales en la apropiación de tendencias culturales, revelando cómo se transforman y circulan en el espacio digital transnacional.
+
+---
+
+# Objetivos
+
+## Objetivo general
+Analizar comparativamente las búsquedas en Pinterest en 2024 entre Europa mediterránea e Hispanoamérica para evaluar el grado de homogeneización cultural.
+
+## Objetivos específicos
+1. Detectar similitudes y diferencias en términos de búsqueda.
+2. Examinar diferencias por género en cada región.
+3. Evaluar procesos de convergencia cultural.
+4. Interpretar sociológicamente las tendencias observadas.
+
+---
+
+# Hipótesis
+**H1:** Las búsquedas más frecuentes en Pinterest muestran tanto coincidencias como divergencias temáticas entre Europa mediterránea e Hispanoamérica, revelando patrones compartidos y particularidades culturales y regionales. 
+
+**H2:** Las preferencias de búsqueda en Pinterest difieren según el género, configurando universos simbólicos diferenciados que responden a construcciones culturales específicas en cada región. 
+
+**H3:** La coexistencia de términos globales y locales en las búsquedas sugiere una dinámica híbrida entre homogeneización cultural y adaptaciones regionales en el entorno digital. 
+
+**H4:** Las tendencias de búsqueda en Pinterest reflejan esquemas de género tradicionales, reforzando representaciones culturales interiorizadas sobre los roles y aspiraciones estéticas de hombres y mujeres. 
+
+---
+
+# Fuente
+## Fuente principal de datos 
+Pinterest Trends constituirá la herramienta fundamental para la obtención de datos primarios. Esta plataforma, desarrollada por Pinterest, proporciona información detallada sobre los términos más buscados en su red, permitiendo filtrar por ubicación geográfica, período temporal y, en algunos casos, por variables demográficas. Los datos extraídos de esta plataforma se exportan en formato CSV, garantizando así la compatibilidad con las herramientas de análisis estadístico seleccionadas y facilitando la implementación de protocolos rigurosos de verificación y validación de la información recolectada. 
+
+---
+
+## Parámetros de recolección 
+La recolección de datos abarca la totalidad del año 2024, específicamente del 2 de enero al 31 de diciembre, proporcionando así una perspectiva anual completa que permite capturar tanto las variaciones estacionales como las tendencias sostenidas a lo largo del tiempo. Esta decisión temporal responde a la necesidad de contar con un periodo suficientemente extenso para detectar patrones culturales significativos, mientras se mantiene la coherencia temporal necesaria para realizar comparaciones válidas entre regiones. 
+
+---
+
+## Regiones analizadas
+**Europa mediterránea:**
+España
+Italia
+Grecia
+Portugal
+Malta
+
+**Hispanoamérica:**
+México 
+Colombia 
+Chile 
+Argentina 
+
+La selección de los países responde a criterios de representatividad regional, volumen de usuarios en Pinterest y diversidad dentro de cada grupo cultural. Como argumenta Appadurai (2015, p.221) en su análisis de los flujos culturales globales, “las unidades de análisis cultural no pueden ser simplemente territoriales, sino que deben considerar los flujos transicionales de significado que caracterizan la era digital”. Esta perspectiva nos permite superar el nacionalismo metodológico tradicional en favor de un enfoque que reconoce la porosidad de las fronteras culturales. 
+
+
+---
+
+# Análisis de los datos
+Se instalan los paquetes
+Se cargan los paquetes
+```{r packages}
+library(tm)
+library(slam)
+library(text2vec)
+library(dplyr)
+library(readxl)
+library(wordcloud)
+library(RColorBrewer)
+library(tidytext)
+library(tidyr)
+library(ggplot2)
+```
+Se cargan los datos y se les asigna un nombre a cada base de datos
+```{r cargar_datos, include=FALSE}
+library(readxl)
+
+hombres_europa <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Europa Sur hombres.xlsx")
+mujeres_europa <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Europa Sur mujeres.xlsx")
+hombres_hispano <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Hispanoamérica hombres.xlsx")
+mujeres_hispano <- read_excel("C:/Users/34608/Documents/DataScience/Pinterest-Trends/data/Hispanoamérica mujeres.xlsx")
+```
+Se unifican en un solo dataframe
+```{r}
+hombres_europa <- hombres_europa %>% mutate(genero = "Hombre", region = "Europa Sur")
+mujeres_europa <- mujeres_europa %>% mutate(genero = "Mujer", region = "Europa Sur")
+hombres_hisp <- hombres_hispano %>% mutate(genero = "Hombre", region = "Hispanoamérica")
+mujeres_hisp <- mujeres_hispano %>% mutate(genero = "Mujer", region = "Hispanoamérica")
+
+datos <- bind_rows(hombres_europa, mujeres_europa, hombres_hisp, mujeres_hisp)
+```
+Se realiza una limpieza del texto
+```{r}
+stopwords_personalizadas <- c(stopwords("spanish"), "hombre", "mujer", "de", "la", 
+                              "el", "en", "los", "las", "un", "una", "y", "con", "para")
+
+palabras_filtradas <- datos %>%
+  unnest_tokens(palabra, Tendencia) %>%
+  filter(!palabra %in% stopwords_personalizadas)
+```
+Se crean concatenados por género y región
+```{r}
+textos_por_region <- datos %>%
+  group_by(region) %>%
+  summarise(texto = paste(Tendencia, collapse = " "), .groups = "drop")
+
+textos_por_genero <- datos %>%
+  group_by(genero) %>%
+  summarise(texto = paste(Tendencia, collapse = " "), .groups = "drop")
+```
+Se crean funciones para poder hacer las nubes de palabras
+```{r}
+crear_nube <- function(texto, nombre) {
+  corpus <- Corpus(VectorSource(texto))
+  corpus <- tm_map(corpus, content_transformer(tolower))       
+  corpus <- tm_map(corpus, removePunctuation)                  
+  corpus <- tm_map(corpus, removeNumbers)                      
+  corpus <- tm_map(corpus, removeWords, stopwords_personalizadas)  
+  corpus <- tm_map(corpus, stripWhitespace)                    
+  
+  dtm <- TermDocumentMatrix(corpus)
+  matriz <- as.matrix(dtm)
+  frecuencias <- sort(rowSums(matriz), decreasing = TRUE)
+  
+  wordcloud(
+    words = names(frecuencias),
+    freq = frecuencias,
+    min.freq = 2,
+    max.words = 100,
+    colors = brewer.pal(8, "Dark2"),
+    random.order = FALSE
+  )
+}
+```
+
+
+---
+
+## Nubes de palabras
+
+### Por región
+- Diferencias lingüísticas notables: Español e inglés en común entre regiones, predominio del italiano en Europa del Sur.
+- **Términos comunes:** “uñas”, “outfit”, “fade”, “aesthetic”.
+- Uso extendido de anglicismos como tendencia global estética
+```{r}
+par(mfrow = c(1, nrow(textos_por_region)))
+for (i in 1:nrow(textos_por_region)) {
+  crear_nube(textos_por_region$texto[i], textos_por_region$region[i])
+  title(main = textos_por_region$region[i], cex.main = 1.5)
+}
+```
+
+---
+
+### Por género
+- **Hombres:** “fade”, “tattoo”, “ronaldo”, “cortes”.
+- **Mujeres:** “uñas”, “outfits”, “peinados”, “frases”.
+- **Términos compartidos:** “aesthetic” y “wallpaper”.
+- Hombres tienden a especificar género (“corte de pelo hombre”).
+- Necesidad de perspectiva de género en las búsquedas.
+
+```{r}
+par(mfrow = c(1, nrow(textos_por_genero)))
+for (i in 1:nrow(textos_por_genero)) {
+  crear_nube(textos_por_genero$texto[i], textos_por_genero$genero[i])
+  title(main = textos_por_genero$genero[i], cex.main = 1.5)
+}
+```
+
+---
+
+## Ahora, las palabras más frecuentes y los gráficos para género y región
+
+### Palabras más frecuentes por género y su gráfico
+- **Hombres:** cortes de pelo, tatuajes, estética digital, personajes deportivos.
+- **Mujeres:** belleza, moda, estética, maquillaje, frases.
+```{r}
+frecuencias_genero <- palabras_filtradas %>%
+  count(genero, palabra, sort = TRUE) %>%
+  group_by(genero) %>%
+  top_n(10, n) %>%
+  ungroup() %>%
+  arrange(genero, desc(n))
+
+print(frecuencias_genero, n = Inf)
+
+frecuencias_genero %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = genero)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~genero, scales = "free_y") +
+  labs(title = "Palabras más frecuentes por género",
+       x = NULL, y = "Frecuencia")
+```
+
+---
+
+### Palabras más frecuentes por región y su gráfico
+- **Europa del Sur:** fuerte presencia del italiano – “unghie”, “buongiorno”, “uomo”.
+- **Hispanoamérica:** interés en estética personal – “uñas”, “dibujos”, “aesthetic”, “peinados”.
+```{r}
+frecuencias_region <- palabras_filtradas %>%
+  count(region, palabra, sort = TRUE) %>%
+  group_by(region) %>%
+  top_n(10, n) %>%
+  ungroup() %>%
+  arrange(region, desc(n))
+
+print(frecuencias_region, n = Inf)
+
+frecuencias_region %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = region)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~region, scales = "free_y") +
+  labs(title = "Palabras más frecuentes por región",
+       x = NULL, y = "Frecuencia")
+```
+
+---
+
+## Análisis secundario: Se eliminan aquellas palabras comunes entre grupos para detectar posibles diferencias
+
+### Por género
+- **Hombres:** “fade”, “taper”, “tattoo”, “spiderman”, “messi”.
+- **Mujeres:** “vestidos”, “verano”, “ideas”, “elegante”, “tendencia”, “invierno”.
+```{r}
+palabras_comunes_genero <- palabras_filtradas %>%
+  group_by(palabra) %>%
+  summarise(grupos = n_distinct(genero)) %>%
+  filter(grupos > 1) %>%
+  pull(palabra)
+
+frecuencias_genero_sin_comunes <- palabras_filtradas %>%
+  filter(!palabra %in% palabras_comunes_genero) %>%
+  count(genero, palabra, sort = TRUE) %>%
+  group_by(genero) %>%
+  top_n(10, n) %>%
+  ungroup()
+
+frecuencias_genero_sin_comunes %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = genero)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~genero, scales = "free_y") +
+  labs(title = "Palabras más distintivas por género",
+       x = NULL, y = "Frecuencia")
+```
+
+---
+
+### Por región
+- **Europa del Sur:** italiano dominante, mensajes positivos, verano, inspiración.
+- **Hispanoamérica:** estética, frases, maquillaje, términos visuales como “4k”.
+```{r}
+palabras_comunes_region <- palabras_filtradas %>%
+  group_by(palabra) %>%
+  summarise(grupos = n_distinct(region)) %>%
+  filter(grupos > 1) %>%
+  pull(palabra)
+
+frecuencias_region_sin_comunes <- palabras_filtradas %>%
+  filter(!palabra %in% palabras_comunes_region) %>%
+  count(region, palabra, sort = TRUE) %>%
+  group_by(region) %>%
+  slice_max(order_by = n, n = 10) %>%
+  ungroup()
+
+frecuencias_region_sin_comunes %>%
+  ggplot(aes(x = reorder(palabra, n), y = n, fill = region)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  facet_wrap(~region, scales = "free_y") +
+  labs(title = "Palabras más distintivas por región",
+       x = NULL, y = "Frecuencia")
+```
+
+
+---
+
+
+# A continuación se buscan los cambios a lo largo del tiempo de las tendencias
+## Se detectan las columnas cuyo nombre parece una fecha
+## Se convierten las fechas en un formato largo
+## Se agrupan las 5 tendencias más comunes tendencia y género, y se calcula la suma total del valor
+## Se filtran datos solo para esas tendencias
+```{r}
+fechas <- names(datos)[grepl("^\\d{4}-\\d{2}-\\d{2}$", names(datos))]
+
+fechas <- names(datos)[grepl("^\\d{4}-\\d{2}-\\d{2}$", names(datos))]
+
+datos_largos <- datos %>%
+  pivot_longer(
+    cols = all_of(fechas),
+    names_to = "Fecha",
+    values_to = "Valor"
+  ) %>%
+  mutate(
+    Fecha = as.Date(Fecha),
+    Valor = as.numeric(Valor)
+  )
+
+top5_por_genero <- datos_largos %>%
+  group_by(genero, Tendencia) %>%
+  summarise(total = sum(Valor, na.rm = TRUE), .groups = "drop") %>%
+  group_by(genero) %>%
+  slice_max(order_by = total, n = 5) %>%
+  pull(Tendencia) %>%
+  unique()  # Extrae nombres únicos de tendencias
+
+datos_filtrados <- datos_largos %>%
+  filter(Tendencia %in% top5_por_genero)
+```
+
+
+---
+
+
+## Ahora se hacen los gráficos con los cambios en las tendencias más comunes, según la región y el género
+### Gráfico de líneas
+**Datos:** julio 2024 – abril 2025.
+
+**Observaciones clave:**
+
+- Palabras con comportamiento estable: "buongiorno", "buenos días" y "wallpaper.
+
+- “Nails” y “uñas tendencia” muestran variaciones según temporadas recreativas + tendencias.
+
+- Palabras sujetas a tendencia: "taper fade", mullet" y "hello kitty".
+
+```{r}
+ggplot(datos_filtrados, aes(x = Fecha, y = Valor, color = Tendencia)) +
+  geom_line(size = 1) +
+  facet_grid(genero ~ region) +
+  labs(title = "Evolución de las Top 5 tendencias por género y región",
+       x = "Fecha", y = "Nivel de tendencia") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_brewer(palette = "Set1")
+```
+
+
+---
+
+# Discusión
+Los resultados confirman cómo las búsquedas en Pinterest reflejan roles de género tradicionales. Los hombres buscan cortes de pelo, tatuajes y figuras del fútbol como Messi o Ronaldo, reforzando estereotipos de masculinidad ligados al deporte y la apariencia física. La etiqueta “para hombres” en muchas búsquedas refuerza la necesidad de diferenciación masculina (Connell, 1995), mientras que las búsquedas femeninas responden a una socialización hacia lo estético (Beauvoir, 1949). También muestran un creciente interés por lo visual con palabras como aesthetic y wallpaper. En las mujeres predominan términos como uñas, maquillaje, peinados y outfits, evidenciando una construcción social del cuerpo femenino ligada a la estética (Bordo, 1993). Además, se observa una preparación escénica (Goffman, 1956) a través de búsquedas como "vestidos elegantes".
+
+Las diferencias regionales muestran influencias culturales. Por ejemplo, en Europa del Sur destacan búsquedas en italiano y una estética mediterránea.Y en Hispanoamérica se prioriza lo expresivo y emocional (dibujos, frases), con fuerte presencia de tendencias globales (aesthetic, wallpaper), revelando un proceso de globalización híbrida (Ritzer, 2003).
+
+A nivel longitudinal, se destacan tendencias transversales como Hello Kitty (popularizada en 2024 por marketing y redes sociales) y el interés constante por cortes de pelo (hombres) y uñas (mujeres), interpretables como formas de identidad y consumo estético (Baudrillard, 1970).
+
+---
+
+# Conclusiones
+Para finalizar, mediante este análisis se ha podido cumplir con los objetivos del trabajo de analizar las tendencias de búsqueda en Pinterest por género y región, y reflexionar sobre cómo estas búsquedas reflejan construcciones culturales. Asimismo, se ha podido confirmar en gran medida las hipótesis planteadas, al observar patrones diferenciados en las búsquedas de hombres y mujeres, así como contrastes entre regiones que reflejan influencias culturales específicas y dinámicas de globalización.
+
+En cuanto a las diferencias por género, se ha mostrado que las búsquedas de los hombres se centran en aspectos concretos del aspecto físico, como los tatuajes o los cortes de pelo, así como en figuras del fútbol como Messi o Ronaldo. Estas búsquedas no solo reflejan una preocupación estética puntual, sino que también revelan la construcción de una identidad masculina basada en referentes deportivos y visuales. El uso de etiquetas para señalizar que es algo específico para hombres refuerza la necesidad de diferenciarse del universo femenino, tal como señala Connell (1995). Por otro lado, las búsquedas más frecuentes entre mujeres muestran una clara orientación hacia la estética personal, como el maquillaje, las uñas, los peinados y los outfits. Estas elecciones están en consonancia con construcciones históricas de lo femenino como algo vinculado a la belleza, la delicadeza y el cuidado corporal, como destacan Bordo (1993) y Simone de Beauvoir (1949). Además, la búsqueda de términos como “elegante” sugiere una preparación previa para eventos específicos, como menciona Goffman (1956) sobre la presentación de uno mismo en la vida cotidiana.
+
+Respecto a las diferencias regionales, en Europa del Sur se observó una fuerte presencia del italiano y una búsqueda de identidad visual mediterránea. En cambio, en Hispanoamérica predominaron búsquedas emocionales, creativas y estéticamente influenciadas por lo global, con términos en inglés como "aesthetic" y "outfits". Esta convivencia entre lo local y lo global refleja un proceso de hibridación cultural, donde elementos tradicionales coexisten con referentes internacionales, como han propuesto autores como Robertson (1992) o Ritzer (2003).
+
+De esta manera, Pinterest no solo refleja intereses individuales, sino que representa estructuras culturales compartidas por una población que además tiende a seguir 
+
+---
+
+# Muchas gracias!!!❤

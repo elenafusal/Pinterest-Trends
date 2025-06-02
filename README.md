@@ -11,5 +11,9 @@ Este repositorio contiene un análisis de tendencias utilizando datos extraídos
 
 ## Instrucciones script
 Todas las instrucciones del desarrollo del análisis están aclaradas dentro del propio script, es decir, en el archivo `Análisis de tendencias.R`.
-Asegurarse de que están instalados todos los paquetes necesarios para que funcione el script con los análisis. Estos están indicados también en el archivo (.R).
+
+Asegurarse de que están instalados todos los paquetes necesarios para que funcione el script con los análisis y la presentación. Estos están indicados también en el archivo (.R).
+
 ⚠️ IMPORTANTE: Abrir el proyecto con el archivo `Pinterest-Trends.Rproj` antes de inciar el script o el RMarkdown. Es necesario para que las rutas relativas (here::here()) funcionen correctamente en todos los equipos y se puedan abrir sin problema los archivos. 
+
+En cualquier caso ejecutar el `Análisis de tendencias.R` con todos sus paquetes y posteriormente abrir la `presentación/`. 

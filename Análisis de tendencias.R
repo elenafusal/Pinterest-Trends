@@ -8,6 +8,7 @@ install.packages("wordcloud")
 install.packages("RColorBrewer")
 install.packages("tidytext")
 install.packages("ggplot2")
+install.packages("here")
 ### En caso de que el paquete "text2vec" no funcione realizar estos pasos:
 install.packages("remotes")
 remotes::install_cran("text2vec")

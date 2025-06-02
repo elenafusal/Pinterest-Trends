@@ -16,4 +16,4 @@ Asegurarse de que están instalados todos los paquetes necesarios para que funci
 
 ⚠️ IMPORTANTE: Abrir el proyecto con el archivo `Pinterest-Trends.Rproj` antes de inciar el script o el RMarkdown. Es necesario para que las rutas relativas (here::here()) funcionen correctamente en todos los equipos y se puedan abrir sin problema los archivos. 
 
-En cualquier caso ejecutar el `Análisis de tendencias.R` con todos sus paquetes y posteriormente abrir la `presentación/`. 
+En cualquier caso ejecutar el `Análisis de tendencias.R` con todos sus paquetes y posteriormente abrir la `presentación/`, para abrirla es necesario que esté intalado el paquete `here` que aparece en el `.R` junto al resto de paquetes. 

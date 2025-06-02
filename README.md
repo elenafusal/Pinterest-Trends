@@ -9,5 +9,7 @@ Este repositorio contiene un análisis de tendencias utilizando datos extraídos
 - `presentación/`: Presentación en RMarkdown en la que aparecen los resultados de los análisis y todo el trabajo desglosado y explicado. 
 
 ## Instrucciones script
-Todas las instrucciones de desarrollo del análisis están aclaradas dentro del propio script, es decir, en el archivo `Análisis de tendencias.R`.
+Todas las instrucciones del desarrollo del análisis están aclaradas dentro del propio script, es decir, en el archivo `Análisis de tendencias.R`.
 Para ver la presentación, es necesario irse a la carpeta `presentación/` y si algo falla seguir las últimas indicaciones del script. 
+
+⚠️ IMPORTANTE: Asegurarse de abrir el proyecto con el archivo `Pinterest-Trends.Rproj` antes de inciar el script o el RMarkdown. 

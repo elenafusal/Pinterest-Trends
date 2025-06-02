@@ -12,7 +12,6 @@ install.packages("here")
 ### En caso de que el paquete "text2vec" no funcione realizar estos pasos:
 install.packages("remotes")
 remotes::install_cran("text2vec")
-install.packages("rstudioapi", repos = "https://cran.rstudio.com")
 
 ## Se procede a cargar los paquetes
 library(tm)
@@ -24,7 +23,6 @@ library(wordcloud)
 library(RColorBrewer)
 library(tidytext)
 library(tidyr)
-library(rstudioapi)
 library(ggplot2)
 
 ## Se cargan los datos originarios de Excel y se les asigna una etiqueta
